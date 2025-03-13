@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map with Google Doc Popup</title>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        html, body { margin: 0; padding: 0; height: 100vh; overflow: hidden; }
+        #map { width: 100%; height: 100vh; }
+        .leaflet-popup-content iframe { width: 500px; height: 500px; border: none; }
+        .leaflet-popup-content { max-width: 550px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([39.9372, -75.1973], 14);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var testPoint = {
+            Name: "Wilson Park History",
+            Address: "Philadelphia, PA",
+            X: 39.9372,  
+            Y: -75.1973, 
+            Document: "https://docs.google.com/document/d/1BW_hiqgvL__q5NlV-NMKxtABGSuda0PjVCPgDDqBNWc/preview"
+        };
+
+        var marker = L.circleMarker([testPoint.X, testPoint.Y], {
+            radius: 12,
+            fillColor: "orange",
+            color: "orange",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.8
+        }).addTo(map);
+
+        marker.on('click', function() {
+            var popupContent = `<h2>${testPoint.Name}</h2>`;
+            popupContent += `<p><strong>Address:</strong> ${testPoint.Address}</p>`;
+            popupContent += `<h3>Related Document:</h3>
+                             <iframe src="${testPoint.Document}"></iframe>`;
+            
+            L.popup({ maxWidth: 600 }).setLatLng([testPoint.X, testPoint.Y]).setContent(popupContent).openOn(map);
+        });
+    </script>
+</body>
+</html>
